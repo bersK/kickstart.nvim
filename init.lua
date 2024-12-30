@@ -189,6 +189,19 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Keybinds for using the floating term and calling the build command inside it
+local function toggle_floaterm_with_makeprg()
+  local makeprg_value = vim.api.nvim_get_option_value('makeprg', {})
+  local command = string.format('FloatermSend %s\n', makeprg_value)
+  vim.cmd 'FloatermToggle'
+  vim.cmd(command)
+end
+
+vim.keymap.set('n', '<C-b>', toggle_floaterm_with_makeprg, { noremap = true })
+vim.keymap.set('n', '<C-j>', ':FloatermToggle<CR>', { desc = 'Toggle floaterm' })
+vim.keymap.set('t', '<C-j>', '<C-\\><C-n>:FloatermToggle<CR>', { desc = 'Toggle floaterm' })
+vim.keymap.set('t', '<C-b>', '<C-\\><C-n>:FloatermToggle<CR>', { desc = 'Toggle floaterm' })
+
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -893,6 +906,7 @@ require('lazy').setup({
       --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
+  { 'voldikss/vim-floaterm' },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
